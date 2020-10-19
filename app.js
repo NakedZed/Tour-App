@@ -24,33 +24,6 @@ mongoose.connect(DB, {
     console.log('db connec successful')
 })
 
-const tourSchema = new mongoose.Schema({
-    name:{
-        type: String,
-        required:[true, 'A tour mustve a name'],
-        unique:true
-    },
-    price:{
-        type:Number,
-        default:4.5
-    },
-    rating:{
-        type: Number
-    }
-})
-
-const Tour = mongoose.model('Tour', tourSchema);
-
-var tour1 = new Tour({
-    name: 'Tour1',
-    price:500,
-    rating:9 
-})
-tour1.save().then(doc => {
-    console.log(doc)
-}).catch(err => {
-    console.log(err)
-})
 //////////////////////////////////////////////////////////////////////////////////////////
 //Middlewares
 app.use(express.json())
