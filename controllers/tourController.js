@@ -22,7 +22,7 @@ exports.getAllTours = async (req, res) => {
 }
 
 exports.addNewTour = async (req, res) => {
-    
+     
     try{
     newTour = await Tour.create(req.body)
 
@@ -56,3 +56,37 @@ exports.getTourById =  async (req, res) => {
         })
     }}
 
+exports.updateTour = async (req, res) => {
+
+    try{
+    var updatedTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true
+    })
+        res.status(200).json({
+            status:"success",
+            updatedTour
+        })
+    }catch(err){
+        res.status(400).json({
+        status:'fail',
+        message:'invalid data'
+    })
+
+    }
+
+}
+exports.deleteTour = async (req, res) => {
+    try{
+       var deletedTour = await Tour.findByIdAndDelete(req.params.id)
+       res.status(200).json({
+        status:"success",
+        deletedTour
+    })
+
+    }catch{
+        res.status(400).json({
+            status:'fail',
+            message:'invalid data'
+    })
+}}
