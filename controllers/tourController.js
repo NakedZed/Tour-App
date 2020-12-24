@@ -3,8 +3,36 @@ const Tour = require('./../models/tourModel')
 
 exports.getAllTours = async (req, res) => {
 
-    try{
-            tours = await Tour.find()
+    console.log(req.query)
+
+    try{    //Build the QUERY
+            //Filtering
+            const queryObj = {...req.query}
+            execludedFields = ['page', 'sort', 'limit', 'fields'] //when added in the url in the endpoint they need to be execluded
+            execludedFields.forEach(el => delete queryObj[el]) //we will delete the key and value if its one of the execluded array
+            
+            //Advanced Filtering
+            // const queryStr = JSON.stringify(queryObj)
+            
+            // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
+          
+            // console.log(JSON.parse(queryStr))
+
+            let query =  Tour.find(queryObj)
+
+            // Sorting the results
+            if(req.query.sort){
+                let sortBy = req.query.sort.split(',').join(' ') //In case the user wanna sort by more than one VALUE
+                query = query.sort(sortBy) //Sorting by the query we want Ex: price
+            }else{
+                query = query.sort('-createdAt')
+            }
+
+
+            //Execute the QUERY
+            const tours = await query
+
+
                 res.json({
                     status: 'success',
                     numberOfResults : tours.length,
@@ -15,7 +43,8 @@ exports.getAllTours = async (req, res) => {
     }catch(err){
                 res.status(400).json({
                     status:'fail',
-                    message:'invalid data'
+                    message:'invalid data',
+                    err: err
                 })
             }
 
@@ -33,7 +62,8 @@ exports.addNewTour = async (req, res) => {
     }catch(err){
         res.status(400).json({
             status:'fail',
-            message:'invalid data'
+            message:'invalid data',
+            err: err
         })
         
     }
