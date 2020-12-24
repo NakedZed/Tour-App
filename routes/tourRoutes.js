@@ -5,6 +5,8 @@ const router = express.Router()
 
 // router.param('id', tourController.checkID) //middleware for checking the validity of the id
 
+router.route('/top-cheap-tours')
+     .get(tourController.topThreeTours, tourController.getAllTours)
 
 router.route('/')
     .get(tourController.getAllTours)

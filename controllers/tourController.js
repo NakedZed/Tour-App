@@ -1,5 +1,15 @@
 const Tour = require('./../models/tourModel')
 
+exports.topThreeTours = (req, res, next) => {
+
+    req.query.limit = '3';
+    req.query.sort= '-price'
+    req.query.fields = 'name,price,ratingsAvg,difficulty,summary'
+    next()
+
+}
+
+
 
 exports.getAllTours = async (req, res) => {
 
@@ -40,9 +50,9 @@ exports.getAllTours = async (req, res) => {
 
             //Pagination
             if(req.query.page){
-                page = req.query.page * 1 || 1
-                limit = req.query.limit * 1 || 10
-                let amoutSkipped = (page -1) * limit
+                page = req.query.page * 1 || 1 //Number of page i wanna display it
+                limit = req.query.limit * 1 || 10 //Number of results(documents) to be shown.
+                let amoutSkipped = (page -1) * limit //Calculating how many result should be skipped before the page we wanna show.
 
                 query = query.skip(amoutSkipped).limit(limit)
             }
