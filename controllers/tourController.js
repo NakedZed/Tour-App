@@ -28,6 +28,26 @@ exports.getAllTours = async (req, res) => {
                 query = query.sort('-createdAt')
             }
 
+            //Field limiting
+            if(req.query.fields){
+                // console.log(req.query.fields.split(','))
+               let fields =  req.query.fields.split(',').join(' ')
+               console.log(fields)
+               query = query.select(fields)
+            }else{ //if the user didnt select fields,  we wont send them the --v field in the documents.
+                query = query.select('-__v')  
+            }
+
+            //Pagination
+            if(req.query.page){
+                page = req.query.page * 1 || 1
+                limit = req.query.limit * 1 || 10
+                let amoutSkipped = (page -1) * limit
+
+                query = query.skip(amoutSkipped).limit(limit)
+            }
+
+
 
             //Execute the QUERY
             const tours = await query
